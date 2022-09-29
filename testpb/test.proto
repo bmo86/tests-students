@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+import "studentpb/student.proto";
+
+package test;
+
+option go_package = "student-proto/testpb";
+
+message Test {
+    string id = 1;
+    string name = 2;
+}
+
+
+message GetTestRequest {
+    string id = 1;
+}
+
+message SetTestResponse {
+    string id = 1;
+    string name = 2;
+}
+
+
+message Question {
+    string id = 1;
+    string answer = 2;
+    string question = 3;
+    string test_id = 4;
+}
+
+message QuestionsPerTest {
+    string id = 1;
+    string question = 2;
+    bool ok = 3;
+    int32 current = 4;
+    int32 total = 5;
+}
+
+message SetQuestionResponse {
+    bool ok = 1;
+}
+
+message EnrollmentRequest {
+    string student_id = 1;
+    string test_id = 2;
+}
+
+message GetStudentsPerTestRequest {
+    string test_id = 1;
+}
+
+
+message TakeTestRequest {
+    string answer = 1;
+    string test_id = 2;
+    string student_id = 3;
+}
+
+
+message GetScoreTestRequest {
+    string test_id = 1;
+    string student_id = 2;
+}
+
+message TestScore {
+    string test_id = 1;
+    string student_id = 2;
+    int32 ok = 3;
+    int32 ko = 4;
+    int32 total = 5;
+    int32 score = 6;
+}
+
+
+
+
+
+service TestService {
+    rpc GetTest(GetTestRequest) returns (Test);
+    rpc SetTest(Test) returns (SetTestResponse);
+    rpc SetQuestions(stream Question) returns (SetQuestionResponse);
+    rpc EnrollStudents(stream EnrollmentRequest) returns (SetQuestionResponse);
+    rpc GetStudentsPerTest(GetStudentsPerTestRequest) returns (stream student.Student);
+    rpc TakeTest(stream TakeTestRequest) returns (stream QuestionsPerTest);
+    rpc GetTestScore(GetScoreTestRequest) returns (TestScore);
+} 
