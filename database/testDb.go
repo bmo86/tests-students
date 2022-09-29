@@ -79,7 +79,7 @@ func (repo *PostgressRepository) SetEnrollment(ctx context.Context, enrollment *
 
 //test-questions-answer
 func (repo *PostgressRepository) GetQuestionsPerTest(ctx context.Context, testId string) ([]*models.Question, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT id, question FROM questions WHERE test_id = $1", testId)
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, question, answer FROM questions WHERE test_id = $1", testId)
 
 	if err != nil {
 		return nil, err
@@ -96,7 +96,7 @@ func (repo *PostgressRepository) GetQuestionsPerTest(ctx context.Context, testId
 
 	for rows.Next() {
 		var question = models.Question{}
-		if err = rows.Scan(&question.Id, &question.Question); err == nil {
+		if err = rows.Scan(&question.Id, &question.Question, &question.Answer); err == nil {
 			qs = append(qs, &question)
 		}
 	}
